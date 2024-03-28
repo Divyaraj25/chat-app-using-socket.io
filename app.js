@@ -25,13 +25,14 @@ io.on("connect", (socket) => {
   });
   socket.emit("users", `Welcome ${socket.id}`);
   socket.broadcast.emit("users", `new user added ${socket.id}`);
-  socket.on("sendlocation", (data) => {
+  socket.on("sendlocation", (data, callback) => {
     const { latitude, longitude } = data;
     console.log(data);
     console.log(typeof data);
     const jsondata= JSON.stringify(data)
     console.log(jsondata);
     console.log(typeof jsondata);
+    callback()
     socket.broadcast.emit("location", `https://google.com/maps?q=${longitude},${latitude}`);
   });
 });

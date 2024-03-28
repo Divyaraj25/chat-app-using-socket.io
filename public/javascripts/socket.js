@@ -5,10 +5,17 @@ const $messageForm = document.querySelector("form");
 const $messageFormInput = $messageForm.querySelector("input");
 const $messageFormButton = $messageForm.querySelector("#sendmsg");
 const $locationButton = document.querySelector("#send-location");
+const $messages = document.querySelector("#messages");
+const messageTemplate = document.querySelector("#message-template").innerHTML;
+const locationTemplate = document.querySelector("#location-template").innerHTML;
 
 socket.on("message", (msg) => {
   console.log(msg);
-  document.querySelector("h1").innerText = msg;
+  const html = Mustache.render(messageTemplate, {
+    messages: msg.text,
+    createdAt: moment(msg.createdAt).format("h:mm a"), // h:mm a is 12 hour format => 12:30 pm and HH:mm:ss => 00:30:00
+  });
+  $messages.insertAdjacentHTML("beforeend", html); // afterbegin means before first element and beforeend means after last
 });
 
 $messageForm.addEventListener("submit", (e) => {
@@ -27,7 +34,7 @@ socket.on("users", (msg) => {
 
 document.querySelector("#send-location").addEventListener("click", () => {
   // disable button
-  $locationButton.setAttribute('disabled', 'disabled');
+  $locationButton.setAttribute("disabled", "disabled");
   console.log("location sharing....");
   console.log(navigator.geolocation);
   navigator.geolocation.getCurrentPosition((position) => {
@@ -41,12 +48,17 @@ document.querySelector("#send-location").addEventListener("click", () => {
       },
       (msg) => {
         console.log("location shared " + msg);
-        $locationButton.removeAttribute('disabled');
+        $locationButton.removeAttribute("disabled");
       }
     );
   });
 });
 
-socket.on("location", (msg) => {
-  console.log(msg);
+socket.on("location", (url) => {
+  console.log(url);
+  const html = Mustache.render(locationTemplate, {
+    url:url.url,
+    createdAt: moment(url.createdAt).format("h:mm a"),
+  });
+  $messages.insertAdjacentHTML("beforeend", html);
 });

@@ -4,6 +4,7 @@ const http = require("node:http").createServer(app);
 const io = require("socket.io")(http);
 const path = require("node:path");
 const routes = require("./routes/index");
+const {generateMsgs, generateLocations} = require("./utils/messages")
 
 const publicPath = path.join(__dirname, "public");
 const viewsPath = path.join(__dirname, "views");
@@ -21,7 +22,7 @@ let click = 0;
 io.on("connect", (socket) => {
   socket.on("sendmsg", (msg, callback) => {
     console.log(msg);
-    socket.broadcast.emit("message", msg);
+    io.emit("message", generateMsgs(msg));
     callback();
   });
   socket.emit("users", `Welcome ${socket.id}`);
@@ -35,9 +36,9 @@ io.on("connect", (socket) => {
     console.log(jsondata);
     console.log(typeof jsondata);
     callback("sharing....");
-    socket.broadcast.emit(
+    io.emit(
       "location",
-      `https://google.com/maps?q=${latitude},${longitude}`
+      generateLocations(`https://google.com/maps?q=${latitude},${longitude}`)
     );
   });
 });

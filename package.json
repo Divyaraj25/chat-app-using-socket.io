@@ -1,0 +1,20 @@
+{
+  "name": "28_3_24_udemy-socket-io",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "dev":"nodemon app.js -e js,ejs",
+    "start": "node app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "ejs": "^3.1.9",
+    "express": "^4.19.2",
+    "mongodb": "^6.5.0",
+    "mongoose": "^8.2.3",
+    "socket.io": "^4.7.5"
+  }
+}

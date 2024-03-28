@@ -9,3 +9,7 @@ document.querySelector("form").addEventListener("submit", (e) => {
   const message = e.target.elements.message// taking input from user, message is name of input:text
   socket.emit("sendmsg", message.value);
 });
+
+socket.on('users', (msg)=>{
+  console.log(msg);
+})

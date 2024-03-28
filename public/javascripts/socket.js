@@ -19,14 +19,15 @@ document.querySelector("#send-location").addEventListener("click", () => {
   console.log(navigator.geolocation);
   navigator.geolocation.getCurrentPosition((position) => {
     console.log(position);
+    // socket.emit("eventname", data, "client side callback") => when server takes the data then gives acknowledgement then call the client side callback
     socket.emit(
       "sendlocation",
       {
         latitude: position.coords.latitude,
         longitude: position.coords.longitude,
       },
-      () => {
-        console.log("location shared");
+      (msg) => {
+        console.log("location shared " + msg);
       }
     );
   });

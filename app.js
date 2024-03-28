@@ -19,9 +19,10 @@ app.set("views", viewsPath);
 let click = 0;
 
 io.on("connect", (socket) => {
-  socket.on("sendmsg", (msg) => {
+  socket.on("sendmsg", (msg, callback) => {
     console.log(msg);
     socket.broadcast.emit("message", msg);
+    callback();
   });
   socket.emit("users", `Welcome ${socket.id}`);
   socket.broadcast.emit("users", `new user added ${socket.id}`);
@@ -30,11 +31,14 @@ io.on("connect", (socket) => {
     const { latitude, longitude } = data;
     console.log(data);
     console.log(typeof data);
-    const jsondata= JSON.stringify(data)
+    const jsondata = JSON.stringify(data);
     console.log(jsondata);
     console.log(typeof jsondata);
-    callback("sharing....")
-    socket.broadcast.emit("location", `https://google.com/maps?q=${longitude},${latitude}`);
+    callback("sharing....");
+    socket.broadcast.emit(
+      "location",
+      `https://google.com/maps?q=${latitude},${longitude}`
+    );
   });
 });
 

@@ -1,13 +1,24 @@
 const socket = io();
+
+// $ sign is only for convention for identifying dom elements and not necessary
+const $messageForm = document.querySelector("form");
+const $messageFormInput = $messageForm.querySelector("input");
+const $messageFormButton = $messageForm.querySelector("#sendmsg");
+const $locationButton = document.querySelector("#send-location");
+
 socket.on("message", (msg) => {
   console.log(msg);
   document.querySelector("h1").innerText = msg;
 });
 
-document.querySelector("form").addEventListener("submit", (e) => {
+$messageForm.addEventListener("submit", (e) => {
   e.preventDefault();
   const message = e.target.elements.message; // taking input from user, message is name of input:text
-  socket.emit("sendmsg", message.value);
+  socket.emit("sendmsg", message.value, () => {
+    console.log("message sended");
+    $messageFormInput.value = "";
+    $messageFormInput.focus();
+  });
 });
 
 socket.on("users", (msg) => {
@@ -15,6 +26,8 @@ socket.on("users", (msg) => {
 });
 
 document.querySelector("#send-location").addEventListener("click", () => {
+  // disable button
+  $locationButton.setAttribute('disabled', 'disabled');
   console.log("location sharing....");
   console.log(navigator.geolocation);
   navigator.geolocation.getCurrentPosition((position) => {
@@ -28,6 +41,7 @@ document.querySelector("#send-location").addEventListener("click", () => {
       },
       (msg) => {
         console.log("location shared " + msg);
+        $locationButton.removeAttribute('disabled');
       }
     );
   });

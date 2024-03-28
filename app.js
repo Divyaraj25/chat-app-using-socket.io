@@ -19,13 +19,10 @@ app.set("views", viewsPath);
 let click = 0;
 
 io.on("connect", (socket) => {
-  socket.emit("message", "Welcome!");
-  socket.on("increment", ()=>{
-    click++;
-    console.log(socket.id); // gives id of particular client that clicked the button
-    // socket.emit('clicked', click) // gives message to particular client
-    io.emit('clicked', click) // gives update to all clients in changing the count
-  });
+  socket.on("sendmsg", (msg)=>{
+    console.log(msg);
+    socket.broadcast.emit("message", msg)
+  })
 });
 
 http.listen(3000, () => {

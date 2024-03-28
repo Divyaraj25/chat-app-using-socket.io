@@ -4,11 +4,7 @@ socket.on("message", (msg) => {
   document.querySelector("h1").innerText = msg;
 });
 
-socket.on("clicked", (click) => {
-  console.log(`the count has been updated ${click}`);
-});
-
-document.querySelector("button").addEventListener("click", () => {
-  console.log("clicked");
-  socket.emit("increment");
+document.querySelector("form").addEventListener("submit", (e) => {
+  e.preventDefault();
+  socket.emit("sendmsg", document.querySelector("#msg").value);
 });

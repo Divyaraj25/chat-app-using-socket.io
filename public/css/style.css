@@ -1,0 +1,16 @@
+#timestamp {
+  font-size: 14px;
+  color: #a6a6a6;
+  font-weight: lighter;
+}
+
+input {
+  border-radius: 5px;
+}
+
+input:hover {
+  cursor: vertical-text;
+}
+button:hover {
+  cursor: pointer;
+}

@@ -1,16 +1,71 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  height: 100vh;
+}
+
 #timestamp {
   font-size: 14px;
   color: #a6a6a6;
   font-weight: lighter;
 }
 
-input {
+#send-location {
+  width: 150px;
+  height: 40px;
+}
+
+#name {
+  font-size: 5px;
+  border: 1px solid grey;
   border-radius: 5px;
 }
 
-input:hover {
-  cursor: vertical-text;
+/* #chating{
+    background-color: cadetblue;
+} */
+
+/*
+style taken from udemy
+*/
+.centered-form {
+  background: #333744;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
-button:hover {
-  cursor: pointer;
+.centered-form__box {
+  box-shadow: 0 0 17px 1px #1d1f26;
+  background: #f7f7fa;
+  padding: 24px;
+  width: 250px;
+}
+.centered-form button {
+  width: 100%;
+  background-color: aquamarine;
+}
+.centered-form input {
+  margin-bottom: 16px;
+  width: 100%;
+}
+.room-title {
+  font-weight: 400;
+  font-size: 22px;
+  background: #2c2f3a;
+  padding: 24px;
+}
+.list-title {
+  font-weight: 500;
+  font-size: 18px;
+  margin-bottom: 4px;
+  padding: 12px 24px 0;
+}
+.users {
+  list-style-type: none;
+  font-weight: 300;
+  padding: 12px 24px 0;
 }

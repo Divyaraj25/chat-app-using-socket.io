@@ -8,10 +8,14 @@ const $locationButton = document.querySelector("#send-location");
 const $messages = document.querySelector("#messages");
 const messageTemplate = document.querySelector("#message-template").innerHTML;
 const locationTemplate = document.querySelector("#location-template").innerHTML;
+const roomTemplate = document.querySelector("#room-template").innerHTML;
+
+let { username, room } = Qs.parse(location.search, { ignoreQueryPrefix: true }); // ignoreQueryPrefix ignores "?" in query
 
 socket.on("message", (msg) => {
   console.log(msg);
   const html = Mustache.render(messageTemplate, {
+    name: msg.name,
     messages: msg.text,
     createdAt: moment(msg.createdAt).format("h:mm a"), // h:mm a is 12 hour format => 12:30 pm and HH:mm:ss => 00:30:00
   });
@@ -57,8 +61,29 @@ document.querySelector("#send-location").addEventListener("click", () => {
 socket.on("location", (url) => {
   console.log(url);
   const html = Mustache.render(locationTemplate, {
-    url:url.url,
+    name: url.name,
+    url: url.url,
     createdAt: moment(url.createdAt).format("h:mm a"),
   });
   $messages.insertAdjacentHTML("beforeend", html);
 });
+
+socket.emit('join', {username, room}, (error)=>{
+    if(error){
+        alert(error)
+        location.href = '/'
+    }
+
+    console.log('user joined')
+})
+
+socket.on('roomData', ({room, users})=>{
+    console.log(room)
+    console.log(users)
+
+    const html = Mustache.render(roomTemplate, {
+        room,
+        users
+    })
+    document.querySelector('#sidebar').innerHTML += html
+})

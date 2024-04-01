@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/img/favicon.png" type="image/png">
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <title>Chat App</title>
+</head>
+
+<body>
+    <div class="container-fluid row h-100">
+        <div id="sidebar" class="col-3 bg-warning">
+            <h1 class="text-center">Chat App</h1>
+            <hr>
+        </div>
+        <div id="chating" class="col-9 d-flex flex-column justify-content-between align-self-end h-100">
+            <div id="messages" class="overflow-auto mt-3" style="max-height: calc(100vh - 100px);"></div>
+            <div id="inputNformNbutton" class="row mb-3">
+                <form class="col-10 align-self-center">
+                    <div class="row">
+                        <input type="text" name="message" id="msg" class="offset-1 col-9" placeholder="Message"
+                            autocomplete="off" required>
+                        <button id="sendmsg" class="btn btn-primary offset-1 col-1 mx-1">Send</button>
+                    </div>
+                </form>
+                <button id="send-location" class="btn btn-primary col-1 px-2">Send Location</button>
+            </div>
+        </div>
+    </div>
+    <script id="message-template" type="text/html">
+        <div class="d-flex justify-content-between mx-5">
+            <div id="nameNmsg" class="d-flex flex-column">
+                <span id="name" class="fs-6 p-1 fw-lighter">{{name}}</span>
+                <span id="msgs" class="fs-4">> {{messages}}</span>
+            </div>
+            <span id="timestamp" class="align-self-end">{{createdAt}}</span>
+        </div>
+    </script>
+    <script id="location-template" type="text/html">
+        <div class="d-flex justify-content-between mx-5">
+            <div id="nameNmsg" class="d-flex flex-column">
+                <span id="name" class="fs-6 p-1 fw-lighter">{{name}}</span>
+                <a href="{{url}}" target="_blank" class="fs-4">> My Current location</a>
+            </div>
+            <span class="align-self-end" id="timestamp">{{createdAt}}</span>
+        </div>
+    </script>
+    <script id="room-template" type="text/html">
+        <h2 class="room-title">{{room}}</h2>
+        <h3 class="list-title">Users</h3>
+        <ul class="users">
+            <!-- this is a mustache template loop for user names-->
+            {{#users}}
+                <li>{{user}}</li>
+            {{/users}}
+        </ul>
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.0.1/mustache.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.6.0/qs.min.js"></script>
+    <script src="https://cdn.socket.io/4.1.3/socket.io.min.js"></script>
+    <script src="/javascripts/socket.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

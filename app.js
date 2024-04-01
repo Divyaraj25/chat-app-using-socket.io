@@ -4,7 +4,13 @@ const http = require("node:http").createServer(app);
 const io = require("socket.io")(http);
 const path = require("node:path");
 const routes = require("./routes/index");
-const {generateMsgs, generateLocations} = require("./utils/messages")
+const { generateMsgs, generateLocations } = require("./utils/messages");
+const {
+  addUser,
+  removeUser,
+  getUser,
+  getUsersInRoom,
+} = require("./utils/users");
 
 const publicPath = path.join(__dirname, "public");
 const viewsPath = path.join(__dirname, "views");
@@ -20,15 +26,42 @@ app.set("views", viewsPath);
 let click = 0;
 
 io.on("connect", (socket) => {
-  socket.on("sendmsg", (msg, callback) => {
-    console.log(msg);
-    io.emit("message", generateMsgs(msg));
+  socket.on("join", (options, callback) => {
+    const { error, user } = addUser({ id: socket.id, ...options });
+
+    if (error) {
+      return callback(error);
+    }
+
+    console.log(user.username, user.room);
+    socket.join(user.room);
+
+    // socket.to(user.room).emit("users", `Welcome ${user.username}`);
+    socket.emit("users", `Welcome ${user.username}`);
+    socket.broadcast.to(user.room).emit("users", `new user added ${user.id}`);
+
+    io.to(user.room).emit('roomData', {
+      room: user.room,
+      users: getUsersInRoom(user.room)
+    })
+
+    console.log(getUsersInRoom(user.room));
+
     callback();
   });
-  socket.emit("users", `Welcome ${socket.id}`);
-  socket.broadcast.emit("users", `new user added ${socket.id}`);
+
+  socket.on("sendmsg", (msg, callback) => {
+    const user = getUser(socket.id);
+    const { username, room } = user;
+    console.log(msg);
+    io.to(room).emit("message", generateMsgs(msg, username));
+    callback();
+  });
+
   // socket.on("eventname", (data, callback)=>{}) => callback is client side callback acknowledgement
   socket.on("sendlocation", (data, callback) => {
+    const user = getUser(socket.id);
+    const { username, room } = user;
     const { latitude, longitude } = data;
     console.log(data);
     console.log(typeof data);
@@ -36,10 +69,24 @@ io.on("connect", (socket) => {
     console.log(jsondata);
     console.log(typeof jsondata);
     callback("sharing....");
-    io.emit(
+    io.to(room).emit(
       "location",
-      generateLocations(`https://google.com/maps?q=${latitude},${longitude}`)
+      generateLocations(
+        `https://google.com/maps?q=${latitude},${longitude}`,
+        username
+      )
     );
+  });
+
+  socket.on("disconnect", () => {
+    const user = removeUser(socket.id);
+    if (user) {
+      io.to(user.room).emit("users", `user left ${user.username}`);
+      io.to(user.room).emit('roomData', {
+        room: user.room,
+        users: getUsersInRoom(user.room)
+      })
+    }
   });
 });
 
